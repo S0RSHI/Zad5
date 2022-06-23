@@ -92,7 +92,37 @@ int main(int arc, char * argv[]) {
         return 0;
     }
 
+    fseek(n, 0, SEEK_SET);
+    fwrite(&File.b_type, sizeof(File.b_type), 1, n);
+    fwrite(&File.b_size, sizeof(File.b_size), 1, n);
+    fwrite(&File.b_rev1, sizeof(File.b_rev1), 1, n);
+    fwrite(&File.b_rev2, sizeof(File.b_rev2), 1, n);
+    fwrite(&File.b_off_B, sizeof(File.b_off_B), 1, n);
+    fseek(n, 14, SEEK_SET);
+    fwrite(&Picture.b_Size, sizeof(Picture.b_Size), 1, n);
+    fwrite(&Picture.b_Width, sizeof(Picture.b_Width), 1, n);
+    fwrite(&Picture.b_Height, sizeof(Picture.b_Height), 1, n);
+    fwrite(&Picture.b_Planes, sizeof(Picture.b_Planes), 1, n);
+    fwrite(&Picture.b_BitCount, sizeof(Picture.b_BitCount), 1, n);
+    fwrite(&Picture.b_Compression, sizeof(Picture.b_Compression), 1, n);
+    fwrite(&Picture.b_SizeImage, sizeof(Picture.b_SizeImage), 1, n);
+    fwrite(&Picture.b_XPelsPerMeter, sizeof(Picture.b_XPelsPerMeter), 1, n);
+    fwrite(&Picture.b_YPelsPerMeter, sizeof(Picture.b_YPelsPerMeter), 1, n);
+    fwrite(&Picture.b_ClrUsed, sizeof(Picture.b_ClrUsed), 1, n);
+    fwrite(&Picture.b_ClrImportant, sizeof(Picture.b_ClrImportant), 1, n);
+
+    fseek(n, sizeof(File.b_off_B), SEEK_SET);
+    int img;
+    for (int i = File.b_off_B; i < File.b_size; i++) {
+        fseek(f, i, SEEK_SET);
+        fseek(n, i, SEEK_SET);
+        fread(&img, 3, 1, f);
+        img = INT_MAX - img;
+        fwrite(&img, 3, 1, n);
+    }
+
     fclose(f);
+    fclose(n);
 
     return 0;
 }
