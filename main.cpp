@@ -85,6 +85,13 @@ int main(int arc, char * argv[]) {
     fread(&Picture.b_ClrImportant, sizeof(Picture.b_ClrImportant), 1, f);
     printf("\nImportant colors: %d", Picture.b_ClrImportant);
 
+    FILE* n = fopen("test-negative.bmp", "wb");
+
+    if (n == nullptr) {
+        printf("Error when openning file");
+        return 0;
+    }
+
     fclose(f);
 
     return 0;
